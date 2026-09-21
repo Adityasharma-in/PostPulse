@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>PostPulse — LinkedIn + X live post coach</title>
+<meta name="description" content="PostPulse scores your LinkedIn and X drafts live with TypeSafe Jev — one call, eight dimensions, reach estimate, A/B compare." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,700;9..144,900&family=Instrument+Sans:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet" />
+<link rel="stylesheet" href="styles.css" />
+</head>
+<body data-platform="linkedin">
+<div class="grain" aria-hidden="true"></div>
+
+<header class="topbar">
+  <div class="wrap topbar-in">
+    <div class="brand">
+      <span class="mark" aria-hidden="true">
+        <svg viewBox="0 0 32 32" width="30" height="30"><rect x="1" y="1" width="30" height="30" rx="9" fill="#16130e"/><path d="M6 17h4l2.5-6 3.5 12 3-8 1.8 2H26" fill="none" stroke="#ff5a2b" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      </span>
+      <span class="brand-tx">
+        <strong>PostPulse</strong>
+        <em>LinkedIn + X live coach <b>× Jev</b></em>
+      </span>
+    </div>
+    <div class="pills">
+      <span id="apiPill" class="pill">checking…</span>
+      <span id="modelPill" class="pill mono">jev-latest</span>
+    </div>
+  </div>
+</header>
+
+<main class="wrap">
+  <section class="hero">
+    <div class="hero-copy">
+      <h1>Write it. <span class="accent">Pulse-check</span> it. Post it.</h1>
+      <p>One draft box, two platform brains. PostPulse judges hook, proof, voice and reach the instant you stop typing — <a href="https://docs.typesafe.ai/introduction" target="_blank" rel="noreferrer">TypeSafe docs ↗</a></p>
+    </div>
+    <div class="platform-switch" role="tablist" aria-label="Platform">
+      <button id="platLinkedin" class="plat active" role="tab" aria-selected="true" data-platform="linkedin">
+        <span class="plat-ic in">in</span>
+        <span class="plat-tx"><strong>LinkedIn</strong><em>story · proof · dwell</em></span>
+        <span class="plat-dot"></span>
+      </button>
+      <button id="platX" class="plat" role="tab" aria-selected="false" data-platform="x">
+        <span class="plat-ic x">𝕏</span>
+        <span class="plat-tx"><strong>X</strong><em>hook · feeling · reposts</em></span>
+        <span class="plat-dot"></span>
+      </button>
+    </div>
+  </section>
+
+  <nav class="modes">
+    <button id="tabSingle" class="mode active">✍️ Single draft</button>
+    <button id="tabAB" class="mode">⚔️ A/B compare</button>
+    <span class="modes-note" id="platformNote">LinkedIn brain · 6000 chars · “…see more” at ~210</span>
+  </nav>
+
+  <!-- SINGLE -->
+  <div id="singleMode">
+    <div class="goal-row" id="goalRow" aria-label="Goal"></div>
+
+    <div class="grid">
+      <div class="col-left">
+        <section class="card composer">
+          <div class="card-top">
+            <div class="who">
+              <span class="avatar" id="avatar">R</span>
+              <span><strong id="whoName">Riley Brown</strong><em id="whoSub">Post to Anyone · LinkedIn</em></span>
+            </div>
+            <span id="charCount" class="mono chars"></span>
+          </div>
+          <textarea id="postInput" rows="9" maxlength="10000" placeholder="What do you want to talk about?"></textarea>
+          <div class="type-row">
+            <span class="type-label mono">TYPE</span>
+            <div id="typePills" class="type-pills"><span class="type-pill dim">Start typing</span></div>
+          </div>
+          <div class="composer-foot">
+            <span id="statLine" class="stats mono"></span>
+            <span class="foot-right">
+              <span id="latency" class="latency mono"></span>
+              <span id="spin" class="spin hidden" aria-hidden="true"></span>
+              <button class="cta" id="postBtn">Check pulse →</button>
+            </span>
+          </div>
+        </section>
+
+        <section class="card preview" id="previewCard">
+          <h2 id="previewTitle">📱 Feed preview — before “…see more”</h2>
+          <div id="previewBox" class="preview-box"><span class="dim">Type to preview your hook…</span></div>
+          <div class="meter-wrap" id="lengthWrap">
+            <div class="meter-top"><span id="lengthTitle">Length sweet spot · 90–220 words</span><span id="lengthLabel" class="mono"></span></div>
+            <div class="meter-track"><div class="meter-zone"></div><div id="lengthFill" class="meter-fill"></div></div>
+          </div>
+        </section>
+      </div>
+
+      <div class="col-right">
+        <section class="card score">
+          <div class="score-top">
+            <div class="score-num-wrap">
+              <div id="scoreNum" class="score-num mono">–</div>
+              <div class="score-cap mono">/ 100</div>
+            </div>
+            <div class="score-meta">
+              <div id="verdict" class="verdict">Ready when you are</div>
+              <div id="verdictSub" class="verdict-sub">Judged ~500 ms after you stop typing</div>
+              <div id="signals" class="signals"></div>
+            </div>
+            <div class="examples">
+              <span class="mono">TRY</span>
+              <span id="exampleRow" class="ex-row"></span>
+            </div>
+          </div>
+          <div class="pulse-track" aria-hidden="true"><div id="pulseFill" class="pulse-fill"></div></div>
+
+          <div class="reach">
+            <div class="reach-inputs">
+              <label>👥 Followers <input id="inFollowers" type="number" min="0" step="100" value="1000" /></label>
+              <label>📊 Avg impressions <input id="inAvg" type="number" min="0" step="50" placeholder="optional" /></label>
+            </div>
+            <div id="reachOut" class="reach-out"><span class="dim">Score a draft to see estimated views…</span></div>
+          </div>
+
+          <div class="dims" id="dims"></div>
+
+          <ul id="tips" class="tips">
+            <li>Type a draft — PostPulse scores eight dimensions in one parallel Jev call and coaches the weakest first.</li>
+          </ul>
+
+          <div class="hist-wrap">
+            <div class="hist-title mono">PULSE AS YOU EDIT · THIS SESSION</div>
+            <svg id="histSpark" viewBox="0 0 300 48" preserveAspectRatio="none" aria-hidden="true"></svg>
+          </div>
+
+          <details class="raw-wrap">
+            <summary class="mono">Raw TypeSafe response JSON</summary>
+            <pre id="rawJson">—</pre>
+          </details>
+        </section>
+      </div>
+    </div>
+  </div>
+
+  <!-- COMPARE -->
+  <div id="abMode" class="hidden">
+    <div class="goal-row" id="goalRowAB" aria-label="Goal"></div>
+    <div class="ab-grid">
+      <div class="card ab-card"><h3>Draft A</h3><textarea id="abA" rows="8" placeholder="Paste draft A…"></textarea></div>
+      <div class="card ab-card"><h3>Draft B</h3><textarea id="abB" rows="8" placeholder="Paste draft B…"></textarea></div>
+    </div>
+    <button id="abGo" class="cta ab-go">Compare drafts</button>
+    <div id="abResult"></div>
+  </div>
+
+  <footer class="foot mono"><span id="statusLine">1 request per judgment · weights live in code · switch platform to change the brain.</span></footer>
+</main>
+<script src="app.js"></script>
+</body>
+</html>
